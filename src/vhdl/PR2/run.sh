@@ -17,6 +17,8 @@ function help {
 	echo "Commandas( all make commands include test bench and vcd ):${reset}"
 	echo "-> ${green}'count'	${reset}to analize and make counter entity"
 	echo "-> ${green}'reg  '	${reset}to analize and make register entity"
+	echo "-> ${green}'add  '	${reset}to analize and make adder entity"
+	echo "-> ${green}'sqr  '	${reset}to analize and make square entity"
 	echo "-> ${green}'topl '	${reset}to analize and make top level entity"
 	echo "-> ${green}'clean'	${reset}to remove all .vcd and .cf files"
 }
@@ -51,36 +53,65 @@ function compile_reg {
 
 	rm error
 }
+# analize and make adder entity
+function compile_add {
+	ghdl -a ./ADDER.vhdl ./TB_ADDER.vhdl 2> error
+
+	if [[ "$(wc -l error)" != "0 error" ]]; then
+		echo "${red}$(cat error)${reset}"
+	else
+		echo "${green}@ ADDER: Correctly compiled${reset}"
+		ghdl -e TB_ADDER
+		ghdl -r TB_ADDER --vcd=ADDER.vcd --stop-time=40ns
+		cp ./ADDER.vcd ${f_vcd}/
+	fi
+
+	rm error
+}
+# analize and make adder entity
+function compile_sqr {
+	ghdl -a ./SQUARE.vhdl ./TB_SQUARE.vhdl 2> error
+
+	if [[ "$(wc -l error)" != "0 error" ]]; then
+		echo "${red}$(cat error)${reset}"
+	else
+		echo "${green}@ SQUARE: Correctly compiled${reset}"
+		ghdl -e TB_SQUARE
+		ghdl -r TB_SQUARE --vcd=SQUARE.vcd --stop-time=40ns
+		cp ./SQUARE.vcd ${f_vcd}/
+	fi
+
+	rm error
+}
 
 function main {
-
 	case ${args[0]} in
 
 		"help" | "h")
 			help
 	    ;;
-
 	  	"count")
 	    	compile_count
 	    ;;
-
 	  	"reg")
 	    	compile_reg
 	    ;;
-
+	    "add")
+	    	compile_add
+	    ;;
+	    "sqr")
+	    	compile_sqr
+	    ;;
 	    "topl")
 	    	topl
 	    ;;
-
 		"clean")
 	    	rm *.vcd *.cf
 	    ;;
-
 	  	*)
 	    	help
 	    ;;
 	esac
-
 }
 
 main

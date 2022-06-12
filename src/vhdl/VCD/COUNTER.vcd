@@ -1,5 +1,5 @@
 $date
-  Thu Jun  9 19:31:10 2022
+  Sun Jun 12 13:57:39 2022
 $end
 $version
   GHDL v0
@@ -13,7 +13,7 @@ $scope module std_logic_1164 $end
 $upscope $end
 $scope module numeric_std $end
 $upscope $end
-$scope module test_bench $end
+$scope module tb_counter $end
 $var reg 1 ! s_in $end
 $var reg 1 " s_out $end
 $scope module uut $end

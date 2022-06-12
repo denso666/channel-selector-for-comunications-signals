@@ -1,7 +1,0 @@
-v 4
-file . "TEST_BENCH.vhdl" "57362967ec7038b4c6560b0e2e47cb9fd98a3141" "20220610003106.252":
-  entity test_bench at 1( 0) + 0 on 21;
-  architecture behavior of test_bench at 6( 78) + 0 on 22;
-file . "COUNTER.vhdl" "d6f0a55b69e0c8964b78fad6dc15275ad117b2d2" "20220610003100.191":
-  entity counter at 1( 0) + 0 on 19;
-  architecture behavior of counter at 12( 155) + 0 on 20;

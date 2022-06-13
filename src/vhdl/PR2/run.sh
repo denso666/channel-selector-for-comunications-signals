@@ -83,6 +83,21 @@ function compile_sqr {
 
 	rm error
 }
+# analize and make top level entity
+function compile_topl {
+	ghdl -a ./ADDER.vhdl ./COUNTER.vhdl ./MUX.vhdl ./REG.vhdl ./SQUARE.vhdl ./PR2.vhdl ./PR2.vhdl ./TB_PR2.vhdl 2> error
+
+	if [[ "$(wc -l error)" != "0 error" ]]; then
+		echo "${red}$(cat error)${reset}"
+	else
+		echo "${green}@ PR2: Correctly compiled${reset}"
+		ghdl -e TB_PR2
+		ghdl -r TB_PR2 --vcd=PR2.vcd --stop-time=400ns
+		cp ./PR2.vcd ${f_vcd}/
+	fi
+
+	rm error
+}
 
 function main {
 	case ${args[0]} in

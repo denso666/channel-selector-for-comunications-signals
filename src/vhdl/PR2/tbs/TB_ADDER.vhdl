@@ -28,19 +28,19 @@ begin
 
 	Stimuli: process begin
 	
-		a <= x"00000000";
+		a <= x"00100000";
 		b <= x"00000001";
 		wait for 10 ns;
 
-		a <= x"00000010";
+		a <= x"10100010";
 		b <= x"00001001";
 		wait for 10 ns;
 
 		a <= x"00001000";
-		b <= x"00000001";
+		b <= x"01001101";
 		wait for 10 ns;
 
-		a <= x"00001000";
+		a <= x"01001001";
 		b <= x"00000111";
 		wait for 10 ns;
 

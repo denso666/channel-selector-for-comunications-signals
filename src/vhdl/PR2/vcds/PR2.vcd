@@ -1,5 +1,5 @@
 $date
-  Tue Jun 14 10:59:14 2022
+  Tue Jun 14 12:28:46 2022
 $end
 $version
   GHDL v0
@@ -17,10 +17,10 @@ $scope module tb_pr2 $end
 $var reg 1 ! flag $end
 $var reg 16 " din[15:0] $end
 $var reg 32 # dout[31:0] $end
-$scope module uut $end
-$var reg 16 $ din[15:0] $end
-$var reg 1 % flag $end
-$var reg 32 & dout[31:0] $end
+$scope module dut $end
+$var reg 16 $ super_din[15:0] $end
+$var reg 1 % super_flag $end
+$var reg 32 & super_dout[31:0] $end
 $var reg 32 ' sqr_out[31:0] $end
 $var reg 32 ( adder_out[31:0] $end
 $var reg 32 ) reg_out[31:0] $end

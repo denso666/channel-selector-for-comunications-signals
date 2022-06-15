@@ -10,9 +10,9 @@ architecture behavior of TB_PR2 is
     component PR2 is
     generic(SN: integer := 16);
     port(
-        DIN : in std_logic_vector(SN-1 downto 0);
-        FLAG: in std_logic;
-        DOUT: out std_logic_vector(2*SN-1 downto 0)
+        super_DIN : in std_logic_vector(SN-1 downto 0);
+        super_FLAG: in std_logic;
+        super_DOUT: out std_logic_vector(2*SN-1 downto 0)
     );
     end component;
 
@@ -25,21 +25,19 @@ begin
 	dut: PR2
 	generic map(SN => 16)
 	port map(
-		DIN		=> din,
-		FLAG	=> flag,
-		DOUT 	=> dout
+		super_DIN	=> din,
+		super_FLAG	=> flag,
+		super_DOUT 	=> dout
 	);
 	flag <= not flag after 5 ns;
 
-	process
-		variable temp: unsigned(15 downto 0) := x"0001";
-    begin
-		for i in 0 to 60 loop
-			din <= std_logic_vector(temp);
-			wait for 10 ns;
+	process begin
 
-			temp := temp + x"0002";
+		for i in 0 to 60 loop
+			din <= x"0001";
+			wait for 10 ns;
 		end loop;
+
 	end process;
 
 end architecture;

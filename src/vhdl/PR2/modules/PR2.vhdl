@@ -4,9 +4,9 @@ use ieee.std_logic_1164.all;
 entity PR2 is
 generic(SN: integer := 16);
 port(
-    DIN : in std_logic_vector(SN-1 downto 0);
-    FLAG: in std_logic;
-    DOUT: out std_logic_vector(2*SN-1 downto 0)
+    super_DIN : in std_logic_vector(SN-1 downto 0);
+    super_FLAG: in std_logic;
+    super_DOUT: out std_logic_vector(2*SN-1 downto 0)
 );
 end entity;
 
@@ -68,7 +68,7 @@ begin
     u_sqr : SQUARE
     generic map(n => SN)
     port map(
-        A => DIN,
+        A => super_DIN,
         R => sqr_out
     );
 
@@ -82,7 +82,7 @@ begin
 
     u_counter : COUNTER
     port map(
-    	S_IN => FLAG,
+    	S_IN => super_FLAG,
     	S_OUT => ctrl
     );
 
@@ -100,7 +100,7 @@ begin
     	A => reg_out,
         B => (others=>'X'),
     	SEL => ctrl,
-    	R => DOUT
+    	R => super_DOUT
     );
 
 end architecture;

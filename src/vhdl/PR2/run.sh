@@ -14,8 +14,9 @@ red=`tput setaf 5`
 blue=`tput setaf 6`
 green=`tput setaf 2`
 
-# module select
+# module conf
 MOD="unknown"
+TIME=0ns
 
 # provide a structure of command
 function help {
@@ -40,7 +41,7 @@ function compile_single {
 		else
 			echo "${green}@ ${MOD}: Correctly compiled${reset}"
 			ghdl -e TB_${MOD}
-			ghdl -r TB_${MOD} --vcd=${MOD}.vcd --stop-time=600ns
+			ghdl -r TB_${MOD} --vcd=${MOD}.vcd --stop-time=${TIME}
 			mv ${MOD}.vcd ${f_vcd}/
 		fi
 
@@ -50,7 +51,7 @@ function compile_single {
 
 # analize and make top level entity
 function compile_topl {
-	ghdl -a ./ADDER.vhdl ./COUNTER.vhdl ./MUX.vhdl ./REG.vhdl ./SQUARE.vhdl ./PR2.vhdl ./TB_PR2.vhdl 2> error
+	ghdl -a ${f_mod}/*.vhdl ${f_tbs}/TB_PR2.vhdl 2> error
 
 	if [[ "$(wc -l error)" != "0 error" ]]; then
 		echo "${red}$(cat error)${reset}"
@@ -58,7 +59,7 @@ function compile_topl {
 		echo "${green}@ PR2: Correctly compiled${reset}"
 		ghdl -e TB_PR2
 		ghdl -r TB_PR2 --vcd=PR2.vcd --stop-time=500ns
-		cp ./PR2.vcd ${f_vcd}/
+		mv ./PR2.vcd ${f_vcd}/
 	fi
 
 	rm error
@@ -70,23 +71,27 @@ function main {
 		"help" | "h")
 			help
 	    ;;
-	  	"count")
+	  	"count" | "c")
 			MOD=COUNTER
+			TIME=600ns
 	    	compile_single
 	    ;;
-	  	"reg")
+	  	"reg" | "r")
 			MOD=REG
+			TIME=200ns
 	    	compile_single
 	    ;;
-	    "add")
+	    "add" | "a")
 			MOD=ADDER
+			TIME=40ns
 	    	compile_single
 	    ;;
-	    "sqr")
+	    "sqr" | "s")
 			MOD=SQUARE
+			TIME=40ns
 	    	compile_single
 	    ;;
-	    "topl")
+	    "topl" | "t")
 	    	compile_topl
 	    ;;
 		"clean")

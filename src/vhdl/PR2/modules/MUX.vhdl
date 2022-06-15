@@ -14,7 +14,7 @@ architecture behavior of MUX is begin
 
 	with SEL select
 		R <= A when '1',
-				 B when '0',
+			 B when '0',
 		  	 (others => 'X') when others;
 
 end architecture;

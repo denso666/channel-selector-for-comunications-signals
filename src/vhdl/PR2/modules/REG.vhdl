@@ -15,14 +15,15 @@ architecture behavior of REG is
 	signal data: std_logic_vector(n-1 downto 0) := (others=>'0');
 begin
 
-	process( DIN, RST ) begin
+	process is begin
 		if RST = '1' then
 			data <= (others=>'0');
 		else
 			data <= DIN;
 		end if;
 
-		DOUT <= data;
+		wait on DIN, RST;
 	end process;
+	DOUT <= data;
 
 end architecture;

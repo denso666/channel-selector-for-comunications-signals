@@ -14,11 +14,18 @@ architecture behavior of PR2 is
     --------------------------------------------------
     --                  COMPONENTS
     --------------------------------------------------
-    component SQUARE is
+    component MULTIPLIER is
     generic(n: integer := 16);
     port(
-    	A: in std_logic_vector(n-1 downto 0);
-    	R: out std_logic_vector((2*n-1) downto 0)
+        A, B: in std_logic_vector(n-1 downto 0);
+        R: out std_logic_vector((2*n-1) downto 0)
+    );
+    end component;
+
+    component SGL_REG is
+    generic(n: integer := 16);
+    port(
+        R: out std_logic_vector(n-1 downto 0)
     );
     end component;
 
@@ -58,24 +65,41 @@ architecture behavior of PR2 is
     --------------------------------------------------
     --                  SIGNALS
     --------------------------------------------------
+    signal sgl_reg_out: std_logic_vector(SN-1 downto 0);
     signal sqr_out: std_logic_vector((2*SN-1) downto 0);
+    signal reciprocal_out: std_logic_vector((2*SN-1) downto 0);
     signal adder_out: std_logic_vector((2*SN-1) downto 0);
     signal reg_out: std_logic_vector((2*SN-1) downto 0);
     signal ctrl: std_logic;
 
 begin
 
-    u_sqr : SQUARE
+    u_sqr : MULTIPLIER
     generic map(n => SN)
     port map(
         A => super_DIN,
+        B => super_DIN,
         R => sqr_out
+    );
+
+    u_sgl_reg : SGL_REG
+    generic map(n => SN)
+    port map(
+        R => sgl_reg_out
+    );
+
+    u_reciprocal : MULTIPLIER
+    generic map(n => SN)
+    port map(
+        A => sqr_out,
+        B => sgl_reg_out,
+        R => reciprocal_out
     );
 
     u_adder : ADDER
     generic map(n => SN*2)
     port map(
-    	A => sqr_out,
+    	A => reciprocal_out,
         B => reg_out,
     	R => adder_out
     );

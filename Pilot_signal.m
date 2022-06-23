@@ -1,35 +1,49 @@
 clc; 
 
 %% ****** Constant variables ***** %%
-chanels = 1;
-frequency = 1;
-stability = 30;
-amplitude = 20;
+chanels = 3;
+frequency = 899000000; %899Mhz
+stability = 80;
+amplitude = 1.2;
+sampling_time = 0.0000001;	% 100 ns
 
 %% ****** Pilot and noise signals ***** %%
-[m_t,t] = pilot_signal(amplitude, frequency, stability);
+[m_t,t] = pilot_signal(amplitude, frequency, stability, sampling_time);
 m_t = binary(m_t, 1, stability);
+m_t =round(m_t,3);
+
 R = noise(m_t, chanels, stability);
+R =round(R,3);
+
 R = binary(R, chanels, stability);
+R =round(R,3);
 
 %% ****** Signal processing ***** %%
 Ps = (1/stability) * sum(m_t.*m_t, 2);  % 20 bits in sumatory
+Ps =round(Ps,3);
+
 Pn = (1/stability) * sum(R.*R, 2);
+Pn =round(Pn,3);
 
 SNRdb = 20*log(Ps ./ Pn);
+SNRdb =round(SNRdb,3);
+
 SNR = 10.^(SNRdb ./ 20);
+SNR =round(SNR,3);
 
 Pn = Ps ./ SNR;
-An = sqrt(Pn);
+Pn =round(Pn,3);
 
-%% ****** Binary values ***** %%
-m_t = dec2bin(m_t*100, 16);			% 11b
-R = dec2bin(m_t*100, 16);			% 13b
-Ps = dec2bin(Ps*100, 16);			% 15b
-Pn = dec2bin(Pn*100, 16);			% 15b
-SNRdb = dec2bin(SNRdb*100, 16);		% 8b
-SNR = dec2bin(SNR*100, 16);			% 7b
-An = dec2bin(An*100, 16);			% 11b
+An = sqrt(Pn);
+An =round(An,3);
+
+An = sort(An);
+if length(unique(An)) == length(An)
+	disp('All elements are unique')
+else
+	fprintf('Repited values: %.4f',length(An)-length(unique(An)))
+end
+
 
 %% ****** Ploting signals ***** %%
 %figure(1)
@@ -44,15 +58,26 @@ An = dec2bin(An*100, 16);			% 11b
 
 clear t stability chanels frequency amplitude;
 
+
+%% ****** Binary values ***** %%
+m_t = dec2bin(m_t*100);			% 11b
+R = dec2bin(m_t*100);			% 13b
+Ps = dec2bin(Ps*100);			% 15b
+Pn = dec2bin(Pn*100);			% 15b
+SNRdb = dec2bin(SNRdb*100);		% 8b
+SNR = dec2bin(SNR*100);			% 7b
+An = dec2bin(An*100);			% 11b
+
+
 %% ****** Private funcions ***** %%
-function [signal,time] = pilot_signal(amplitude, frequency, stability)
-	time = 0:(1/(stability-1)):1; 			%Time vector (30 samples)
-	w = 2*pi*frequency; 		%Omega value	
-	signal = amplitude*cos(w*time); %Cosine signal
+function [signal,time] = pilot_signal(amplitude, frequency, stability, sampling_time)
+	time = 0 : (1 / (stability*(1/sampling_time)-1)) : sampling_time; 	
+	w = 2*pi*frequency; %Omega value	
+	signal = amplitude*cos(deg2rad(w*time)); 
 end 
 
 function noise_signal = noise(m_t, chanels, stability)
-	just_noise = zeros(chanels,stability);	%noise matrix
+	just_noise = zeros(chanels,stability);	
 	noise_signal = zeros(chanels,stability);
 
 	for i=1 : 1 : chanels
